@@ -1,18 +1,55 @@
-import video from "../data/video.js";
+import React, { useState } from "react";
+import video from "../data/video";
+import VideoInfo from "./VideoInfo";
+import VoteButtons from "./VoteButtons";
+import CommentList from "./CommentList";
 
 function App() {
-  console.log("Here's your data:", video);
+  const [upvotes, setUpvotes] = useState(video.upvotes);
+  const [downvotes, setDownvotes] = useState(video.downvotes);
+  const [showComments, setShowComments] = useState(true);
+
+  function handleUpvote() {
+    setUpvotes((prev) => prev + 1);
+  }
+
+  function handleDownvote() {
+    setDownvotes((prev) => prev + 1);
+  }
+
+  function toggleComments() {
+    setShowComments((prev) => !prev);
+  }
 
   return (
     <div className="App">
       <iframe
         width="919"
         height="525"
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        src={video.embedUrl}
         frameBorder="0"
         allowFullScreen
-        title="Thinking in React"
+        title={video.title}
       />
+
+      <VideoInfo
+        title={video.title}
+        views={video.views}
+        createdAt={video.createdAt}
+      />
+
+      <VoteButtons
+        upvotes={upvotes}
+        downvotes={downvotes}
+        onUpvote={handleUpvote}
+        onDownvote={handleDownvote}
+      />
+
+      <button onClick={toggleComments}>
+        {showComments ? "Hide Comments" : "Show Comments"}
+      </button>
+
+      {showComments && <CommentList comments={video.comments} />}
     </div>
   );
 }
